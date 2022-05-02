@@ -49,6 +49,7 @@ public class Player : MonoBehaviour
 
     private bool MoveToNextNode(Vector3 dest)
     {
-        return dest != (transform.position = Vector3.MoveTowards(transform.position, dest, speed * Time.deltaTime));
+        transform.position = Vector3.MoveTowards(transform.position, dest, speed * Time.deltaTime);
+        return dest != transform.position;
     }
 }
