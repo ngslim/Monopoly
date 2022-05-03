@@ -44,6 +44,12 @@ public class Route : MonoBehaviour
         }
     }
 
+    public Node GetNodeInfo(int index)
+    {
+        FillNode();
+        return childNodeList[index].GetComponent<Node>();
+    }
+
     private void FillNode()
     {
         childNodeList.Clear();
