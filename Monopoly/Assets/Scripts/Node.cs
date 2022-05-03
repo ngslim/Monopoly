@@ -9,12 +9,28 @@ public class Node : MonoBehaviour
     public string nameString;
     public int price;
     public int houseNum;
+    public GameManager.NodeType type;
 
     private void Start()
     {
-        transform.Find("Name").GetComponent<TextMeshPro>().text = nameString;
-        transform.Find("Price").GetComponent<TextMeshPro>().text = price.ToString();
+        if (price == 0)
+        {
+            price = Random.Range(100, 501);
+        }
+        if (nameString == "")
+        {
+            if (type == GameManager.NodeType.Place)
+            {
+                nameString = "Unknown Place";
+            } else
+            {
+                nameString = transform.name;
+            }
+        }
+        if (type == GameManager.NodeType.Place)
+        {
+            transform.Find("Name").GetComponent<TextMeshPro>().text = nameString;
+            transform.Find("Price").GetComponent<TextMeshPro>().text = price.ToString();
+        }
     }
-
-
 }
