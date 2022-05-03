@@ -2511,7 +2511,7 @@ MonoBehaviour:
   nameString: 
   price: 0
   houseNum: 0
-  type: 0
+  type: 7
 --- !u!1 &477531494
 GameObject:
   m_ObjectHideFlags: 0
@@ -5308,7 +5308,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 61
+  field of view: 22
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -5333,14 +5333,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.5337392, y: 0.23356254, z: -0.052687254, w: 0.8110457}
-  m_LocalPosition: {x: -1.47, y: 18.73, z: -0.52}
-  m_LocalScale: {x: 0.8851, y: 0.8851, z: 0.8851}
+  m_LocalRotation: {x: 0.3596048, y: 0.31598538, z: -0.13088542, w: 0.8681629}
+  m_LocalPosition: {x: -16, y: 36, z: -22}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 62.922, y: 45.131, z: 21.098}
+  m_LocalEulerAnglesHint: {x: 45, y: 40, z: 0}
 --- !u!1 &1044004384
 GameObject:
   m_ObjectHideFlags: 0
@@ -14397,7 +14397,7 @@ MonoBehaviour:
   nameString: 
   price: 0
   houseNum: 0
-  type: 0
+  type: 6
 --- !u!1 &2035981978
 GameObject:
   m_ObjectHideFlags: 0
