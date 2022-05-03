@@ -13,7 +13,9 @@ public class GameManager : MonoBehaviour
         Pay,
         Jail,
         Factory,
-        Station
+        Station,
+        Start,
+        Park,
     };
 
     public void Update()
