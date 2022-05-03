@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,30 +7,28 @@ public class Player : MonoBehaviour
 {
     public Route route;
     int routePosition;
-    public int steps;
     bool isMoving = false;
+    int startPosition;
     public float speed = 8f;
 
-    private void Update()
+    public bool IsMoving()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && !isMoving)
-        {
-            int firstDice = Random.Range(1, 7);
-            int secondDice = Random.Range(1, 7);
-            steps = firstDice + secondDice;
-            Debug.Log(firstDice + " " + secondDice);
-
-            StartCoroutine(Move());
-        }
+        return isMoving;
     }
 
-    private IEnumerator Move()
+    public int GetRoutePosition()
+    {
+        return routePosition;
+    }
+    
+    public IEnumerator Move(int steps)
     {
         if (isMoving)
         {
             yield break;
         }
         isMoving = true;
+        startPosition = routePosition;
         while(steps > 0)
         {
             routePosition++;
@@ -38,11 +37,17 @@ public class Player : MonoBehaviour
             nextPos.y += 0.6f;
             while (MoveToNextNode(nextPos))
             {
+               
                 yield return null;
             }
-
             yield return new WaitForSeconds(0.1f);
             steps--;
+        }
+        Node dest = route.GetNodeInfo(routePosition);
+        Debug.Log(dest.nameString);
+        if (routePosition < startPosition)
+        {
+            Debug.Log("Complete a lap");
         }
         isMoving = false;
     }
