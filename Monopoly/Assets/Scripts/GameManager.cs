@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     };
 
     bool justRolled = false;
+    bool hasValues = false;
 
     public void Start()
     {
@@ -42,7 +43,15 @@ public class GameManager : MonoBehaviour
                 dices[i].Roll();
             }
         }
-        if (dices[0].HasValue() && dices[1].HasValue() && justRolled)
+        hasValues = true;
+        for (int i = 0; i < dices.Length; i++)
+        {
+            if(!dices[i].HasValue())
+            {
+                hasValues = false;
+            }
+        }
+        if (hasValues && justRolled)
         {
             justRolled = false;
             steps = 0;
