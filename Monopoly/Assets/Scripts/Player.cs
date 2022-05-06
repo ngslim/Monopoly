@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     bool isMoving = false;
     int startPosition;
     public float speed = 8f;
+    bool hasCompletedRoute = false;
 
     public bool IsMoving()
     {
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
         }
         isMoving = true;
         startPosition = routePosition;
+        hasCompletedRoute = false;
         while(steps > 0)
         {
             routePosition++;
@@ -37,7 +39,6 @@ public class Player : MonoBehaviour
             nextPos.y += 0.6f;
             while (MoveToNextNode(nextPos))
             {
-               
                 yield return null;
             }
             yield return new WaitForSeconds(0.1f);
@@ -45,11 +46,17 @@ public class Player : MonoBehaviour
         }
         Node dest = route.GetNodeInfo(routePosition);
         Debug.Log(dest.nameString);
+        hasCompletedRoute = true;
         if (routePosition < startPosition)
         {
             Debug.Log("Complete a lap");
         }
         isMoving = false;
+    }
+
+    public bool HasCompletedRoute()
+    {
+        return hasCompletedRoute;
     }
 
     private bool MoveToNextNode(Vector3 dest)
