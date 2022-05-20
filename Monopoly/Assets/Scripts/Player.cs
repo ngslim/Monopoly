@@ -16,11 +16,6 @@ public class Player : MonoBehaviour
     {
         return isMoving;
     }
-
-    public int GetRoutePosition()
-    {
-        return routePosition;
-    }
     
     public IEnumerator Move(int steps)
     {
@@ -46,6 +41,7 @@ public class Player : MonoBehaviour
         }
         Node dest = route.GetNodeInfo(routePosition);
         Debug.Log(dest.nameString);
+        dest.OnEnter();
         hasCompletedRoute = true;
         if (routePosition < startPosition)
         {
@@ -57,6 +53,11 @@ public class Player : MonoBehaviour
     public bool HasCompletedRoute()
     {
         return hasCompletedRoute;
+    }
+
+    public int GetRoutePosition()
+    {
+        return routePosition;
     }
 
     private bool MoveToNextNode(Vector3 dest)

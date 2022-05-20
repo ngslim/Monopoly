@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     public Player[] players;
     public Route route;
     public Dice[] dices;
+    public GameObject UI;
+    public PopUpSystem popUpSystem;
     int steps;
     int playerCount = 0;
     int currPlayer = 0;
@@ -24,17 +26,20 @@ public class GameManager : MonoBehaviour
 
     bool justRolled = false;
     bool hasValues = false;
+    bool hasEndedTurn = true;
 
     public void Start()
     {
         playerCount = players.Length;
+        popUpSystem = UI.GetComponent<PopUpSystem>();
     }
 
     public void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space) && !players[currPlayer].IsMoving() && !justRolled)
+        if (Input.GetKeyUp(KeyCode.Space) && !players[currPlayer].IsMoving() && !justRolled && hasEndedTurn)
         {
             Debug.Log(players[currPlayer].name + " is rolling");
+            hasEndedTurn = false;
             justRolled = true;
             dices[0].SetValue(0);
             dices[1].SetValue(0);
@@ -62,7 +67,16 @@ public class GameManager : MonoBehaviour
             }
             StartCoroutine(players[currPlayer].Move(steps));
             currPlayer = (currPlayer + 1) % playerCount;
+
         }
+        if(Input.GetKey(KeyCode.X) && !hasEndedTurn)
+        {
+            Debug.Log(players[(currPlayer - 1 + playerCount) % playerCount].name + " has ended turn.");
+            hasEndedTurn = true;
+            popUpSystem.Close();
+        }
+        
+
     }
 
     private int RollDices(int diceNum)

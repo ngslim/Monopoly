@@ -33,4 +33,13 @@ public class Node : MonoBehaviour
             transform.Find("Price").GetComponent<TextMeshPro>().text = price.ToString();
         }
     }
+
+    public void OnEnter()
+    {
+        PopUpSystem popUpSystem = GameObject.Find("UI").GetComponent<PopUpSystem>();
+        if (type == GameManager.NodeType.Place)
+        {
+            popUpSystem.PopUp(nameString, price.ToString());
+        }
+    }
 }
