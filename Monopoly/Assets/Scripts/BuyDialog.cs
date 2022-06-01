@@ -20,12 +20,21 @@ public class BuyDialog : MonoBehaviour
         yesButton = transform.Find("Yes Button").GetComponent<Button>();
         noButton = transform.Find("No Button").GetComponent<Button>();
 
-        ShowQuestion("Do you want to buy this?", () => { Debug.Log("Yes"); }, () => { Debug.Log("No"); });
+        Hide();
     }
 
-    public void ShowQuestion(string _text, Action yesAction, Action noAction)
+    public void ShowQuestion(Place place, Action yesAction, Action noAction)
     {
-        text.text = _text;
+        text.text = "Would you like to buy this?";
+        Debug.Log(place);
+        transform.Find("Name").GetComponent<TextMeshProUGUI>().text = place.nameString;
+        transform.Find("Price").GetComponent<TextMeshProUGUI>().text = place.price.ToString();
+        transform.Find("Upgrade").GetComponent<TextMeshProUGUI>().text = place.upgrade.ToString();
+        for (int i = 0; i < place.pay.Length; i++)
+        {
+            transform.Find("Pay " + i.ToString()).GetComponent<TextMeshProUGUI>().text = place.pay[i].ToString();
+        }
+        gameObject.SetActive(true);
         yesButton.onClick.AddListener(() =>
         {
             Hide();

@@ -7,6 +7,8 @@ public class Node : MonoBehaviour
 {
     public string nameString; 
     public GameManager.NodeType type;
+    public int i;
+    protected Player enterPlayer;
 
     private void Start()
     {
@@ -24,5 +26,7 @@ public class Node : MonoBehaviour
 
     public virtual void OnEnter()
     {
+        i = GameManager.Instance.GetCurrentPlayer();
+        enterPlayer = GameManager.Instance.GetPlayer(i);
     }
 }

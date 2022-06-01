@@ -19,13 +19,13 @@ public class QuestionDialog : MonoBehaviour
         text = transform.Find("Text").GetComponent<TextMeshProUGUI>();
         yesButton = transform.Find("Yes Button").GetComponent<Button>();
         noButton = transform.Find("No Button").GetComponent<Button>();
-
-        ShowQuestion("Do you want to buy this?", () => { Debug.Log("Yes"); }, () => { Debug.Log("No"); });
+        Hide();
     }
 
     public void ShowQuestion(string _text, Action yesAction, Action noAction)
     {
         text.text = _text;
+        gameObject.SetActive(true);
         yesButton.onClick.AddListener(() =>
         {
             Hide();

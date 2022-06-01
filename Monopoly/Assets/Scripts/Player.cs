@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     public float speed = 8f;
     bool hasCompletedRoute = false;
 
+    public int money = 2000;
+
     public bool IsMoving()
     {
         return isMoving;
@@ -46,6 +48,7 @@ public class Player : MonoBehaviour
         if (routePosition < startPosition)
         {
             Debug.Log("Complete a lap");
+            money += GameManager.incomeEveryLap;
         }
         isMoving = false;
     }

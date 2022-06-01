@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
-{
+{   
+    public static GameManager Instance { get; private set; }
+
     public Player[] players;
     public Route route;
     public Dice[] dices;
     public GameObject UI;
-    public PopUpSystem popUpSystem;
+    public static int incomeEveryLap = 200;
     int steps;
     int playerCount = 0;
     int currPlayer = 0;
@@ -30,8 +32,8 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        Instance = this;
         playerCount = players.Length;
-        popUpSystem = UI.GetComponent<PopUpSystem>();
     }
 
     public void Update()
@@ -66,14 +68,12 @@ public class GameManager : MonoBehaviour
                 steps += dices[i].GetValue();
             }
             StartCoroutine(players[currPlayer].Move(steps));
-            currPlayer = (currPlayer + 1) % playerCount;
-
         }
         if(Input.GetKey(KeyCode.X) && !hasEndedTurn)
         {
-            Debug.Log(players[(currPlayer - 1 + playerCount) % playerCount].name + " has ended turn.");
+            Debug.Log(players[currPlayer].name + " has ended turn.");
+            currPlayer = (currPlayer + 1) % playerCount;
             hasEndedTurn = true;
-            popUpSystem.Close();
         }
         
 
@@ -91,4 +91,13 @@ public class GameManager : MonoBehaviour
         return sum;
     }
 
+    public int GetCurrentPlayer()
+    {
+        return currPlayer;
+    }
+
+    public Player GetPlayer(int i)
+    {
+        return players[i];
+    }
 }
