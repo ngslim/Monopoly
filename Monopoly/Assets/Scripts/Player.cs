@@ -11,8 +11,10 @@ public class Player : MonoBehaviour
     int startPosition;
     public float speed = 8f;
     bool hasCompletedRoute = false;
+    int lastStepsNum = 0;
 
     public int money = 2000;
+    public string nameString;
 
     public bool IsMoving()
     {
@@ -25,6 +27,7 @@ public class Player : MonoBehaviour
         {
             yield break;
         }
+        lastStepsNum = steps;
         isMoving = true;
         startPosition = routePosition;
         hasCompletedRoute = false;
@@ -42,13 +45,13 @@ public class Player : MonoBehaviour
             steps--;
         }
         Node dest = route.GetNodeInfo(routePosition);
-        Debug.Log(dest.nameString);
+        Debug.Log("Arrived at " + dest.nameString + " after " + lastStepsNum.ToString() + " steps");
         dest.OnEnter();
         hasCompletedRoute = true;
         if (routePosition < startPosition)
         {
             Debug.Log("Complete a lap");
-            money += GameManager.incomeEveryLap;
+            GameUtils.Instance.AddMoney(this, GameManager.incomeEveryLap);
         }
         isMoving = false;
     }
@@ -61,6 +64,11 @@ public class Player : MonoBehaviour
     public int GetRoutePosition()
     {
         return routePosition;
+    }
+
+    public int GetLastStepsNum()
+    {
+        return lastStepsNum;
     }
 
     private bool MoveToNextNode(Vector3 dest)

@@ -39,16 +39,34 @@ public class Place : Node
         Debug.Log(enterPlayer);
         if (owner == "")
         {
-            BuyDialog.Instance.ShowQuestion(this, () => { GameUtils.Instance.Buy(enterPlayer, this); }, () => { Debug.Log("No"); });
+            BuyDialog.Instance.ShowQuestion(this, () =>
+            {
+                GameUtils.Instance.Buy(enterPlayer, this);
+                GameManager.Instance.SetEndTurnButton(true);
+            }, () =>
+            {
+                GameManager.Instance.SetEndTurnButton(true);
+            });
+            
         }
         else if (enterPlayer.name == owner && houseNum <= 4)
         {
-            QuestionDialog.Instance.ShowQuestion("Would you like to upgrade with " + upgrade.ToString() + " ?", () => { GameUtils.Instance.Upgrade(enterPlayer, this); }, () => { Debug.Log("No"); });    
+            QuestionDialog.Instance.ShowQuestion("Would you like to upgrade with " + upgrade.ToString() + " ?", () =>
+            {
+                GameUtils.Instance.Upgrade(enterPlayer, this);
+                GameManager.Instance.SetEndTurnButton(true);
+            }, () =>
+            {
+                GameManager.Instance.SetEndTurnButton(true);
+            });       
         }
         else if (owner != enterPlayer.name)
         {
             GameUtils.Instance.PayPlace(enterPlayer, this);
-            MessageDialog.Instance.ShowMessage(enterPlayer.name + " paid " + pay[houseNum] + " to " + owner);
-        }
+            MessageDialog.Instance.ShowMessage(enterPlayer.name + " paid " + pay[houseNum] + " to " + owner, () =>
+            {
+                GameManager.Instance.SetEndTurnButton(true);
+            });
+        } 
     }
 }

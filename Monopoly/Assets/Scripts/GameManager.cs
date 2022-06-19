@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {   
@@ -11,9 +12,15 @@ public class GameManager : MonoBehaviour
     public Dice[] dices;
     public GameObject UI;
     public static int incomeEveryLap = 200;
+    public static int stationPrice = 200;
+    public static int fineAmount = 200;
     int steps;
     int playerCount = 0;
     int currPlayer = 0;
+
+    Button rollButton;
+    Button endTurnButton;
+
     public enum NodeType
     {
         Place,
@@ -24,23 +31,44 @@ public class GameManager : MonoBehaviour
         Station,
         Start,
         Park,
+        GoToJail,
     };
 
     bool justRolled = false;
     bool hasValues = false;
     bool hasEndedTurn = true;
 
+    bool rollSignal = false;
+    bool endTurnSignal = false;
+
     public void Start()
     {
         Instance = this;
         playerCount = players.Length;
+        rollButton = GameObject.Find("Roll Button").GetComponent<Button>();
+        endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
+        endTurnButton.interactable = false;
+        BudgetBoard.Instance.Initialize();
+
+        rollButton.onClick.AddListener(() =>
+        {
+            rollSignal = true;
+            SetRollButton(false);
+        });
+
+        endTurnButton.onClick.AddListener(() => {
+            endTurnSignal = true;
+            SetEndTurnButton(false);
+            SetRollButton(true);
+        });
     }
 
     public void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space) && !players[currPlayer].IsMoving() && !justRolled && hasEndedTurn)
+        if (rollSignal && !players[currPlayer].IsMoving() && !justRolled && hasEndedTurn)
         {
             Debug.Log(players[currPlayer].name + " is rolling");
+            rollSignal = false;
             hasEndedTurn = false;
             justRolled = true;
             dices[0].SetValue(0);
@@ -69,14 +97,13 @@ public class GameManager : MonoBehaviour
             }
             StartCoroutine(players[currPlayer].Move(steps));
         }
-        if(Input.GetKey(KeyCode.X) && !hasEndedTurn)
+        if(endTurnSignal && !hasEndedTurn)
         {
+            endTurnSignal = false;
             Debug.Log(players[currPlayer].name + " has ended turn.");
             currPlayer = (currPlayer + 1) % playerCount;
             hasEndedTurn = true;
         }
-        
-
     }
 
     private int RollDices(int diceNum)
@@ -99,5 +126,20 @@ public class GameManager : MonoBehaviour
     public Player GetPlayer(int i)
     {
         return players[i];
+    }
+
+    public int GetPlayerNum()
+    {
+        return playerCount;
+    }
+
+    public void SetRollButton(bool value)
+    {
+        rollButton.interactable = value;
+    }
+
+    public void SetEndTurnButton(bool value)
+    {
+        endTurnButton.interactable = value;
     }
 }

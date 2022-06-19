@@ -5,14 +5,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class BuyDialog : MonoBehaviour
+public class SpecialBuyDialog : MonoBehaviour
 {
-    public static BuyDialog Instance { get; private set; }
-    
+    public static SpecialBuyDialog Instance { get; private set; }
+
     private TextMeshProUGUI text;
     private Button yesButton;
     private Button noButton;
-    
+
     private void Awake()
     {
         Instance = this;
@@ -23,17 +23,11 @@ public class BuyDialog : MonoBehaviour
         Hide();
     }
 
-    public void ShowQuestion(Place place, Action yesAction, Action noAction)
+    public void ShowQuestion(SpecialNode place, Action yesAction, Action noAction)
     {
         text.text = "Would you like to buy this?";
         Debug.Log(place);
         transform.Find("Name").GetComponent<TextMeshProUGUI>().text = place.nameString;
-        transform.Find("Price").GetComponent<TextMeshProUGUI>().text = place.price.ToString();
-        transform.Find("Upgrade").GetComponent<TextMeshProUGUI>().text = place.upgrade.ToString();
-        for (int i = 0; i < place.pay.Length; i++)
-        {
-            transform.Find("Pay " + i.ToString()).GetComponent<TextMeshProUGUI>().text = place.pay[i].ToString();
-        }
         gameObject.SetActive(true);
         yesButton.onClick.RemoveAllListeners();
         noButton.onClick.RemoveAllListeners();

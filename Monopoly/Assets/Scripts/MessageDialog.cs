@@ -20,13 +20,15 @@ public class MessageDialog : MonoBehaviour
         Hide();
     }
 
-    public void ShowMessage(string _text)
+    public void ShowMessage(string _text, Action closeAction)
     {
         text.text = _text;
         gameObject.SetActive(true);
+        closeButton.onClick.RemoveAllListeners();
         closeButton.onClick.AddListener(() =>
         {
             Hide();
+            closeAction();
         });
     }
 

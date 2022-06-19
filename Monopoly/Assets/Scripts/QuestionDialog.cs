@@ -26,6 +26,8 @@ public class QuestionDialog : MonoBehaviour
     {
         text.text = _text;
         gameObject.SetActive(true);
+        yesButton.onClick.RemoveAllListeners();
+        noButton.onClick.RemoveAllListeners();
         yesButton.onClick.AddListener(() =>
         {
             Hide();
