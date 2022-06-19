@@ -39,6 +39,9 @@ public class Route : MonoBehaviour
                 if (deg == 90) { pos.z -= 0.25f; }
                 if (deg == 180) { pos.x -= 0.25f; }
                 if (deg == 270) { pos.z += 0.25f; }
+            } else if (childNodeList[i].name == "Jail")
+            {
+                pos = GameManager.visitingJailPosition;
             }
             movePoints.Add(pos);
         }

@@ -13,8 +13,13 @@ public class Player : MonoBehaviour
     bool hasCompletedRoute = false;
     int lastStepsNum = 0;
 
-    public int money = 2000;
+    public int money;
     public string nameString;
+
+    private void Start()
+    {
+        money = GameManager.startBudget;
+    }
 
     public bool IsMoving()
     {

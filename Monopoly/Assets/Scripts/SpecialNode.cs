@@ -124,8 +124,8 @@ public class SpecialNode : Node
             MessageDialog.Instance.ShowMessage("You are sent to the jail", () =>
             {
                 GameManager.Instance.SetEndTurnButton(true);
-            }); 
-            enterPlayer.transform.position = GameObject.Find("Jail").transform.position;
+            });
+            enterPlayer.transform.position = GameManager.jailPosition;
         }
         else if (type == GameManager.NodeType.Park)
         {

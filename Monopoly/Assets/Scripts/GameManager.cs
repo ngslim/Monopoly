@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     public static int incomeEveryLap = 200;
     public static int stationPrice = 200;
     public static int fineAmount = 200;
+    public static int startBudget = 2000;
+    public static Vector3 jailPosition = new Vector3(0.6f, 0.6f, 16f);
+    public static Vector3 visitingJailPosition = new Vector3(-1f, 0f, 17.5f);
     int steps;
     int playerCount = 0;
     int currPlayer = 0;
