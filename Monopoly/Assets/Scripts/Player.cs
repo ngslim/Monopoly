@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
 
     public int money;
     public string nameString;
+    public List<Place> places = new List<Place>();
+
+    public bool inJail = false;
 
     private void Start()
     {
@@ -69,6 +72,11 @@ public class Player : MonoBehaviour
     public int GetRoutePosition()
     {
         return routePosition;
+    }
+
+    public void SetRoutePosition(int position)
+    {
+        routePosition = position;
     }
 
     public int GetLastStepsNum()

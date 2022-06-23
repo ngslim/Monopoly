@@ -7,14 +7,19 @@ public class GameManager : MonoBehaviour
 {   
     public static GameManager Instance { get; private set; }
 
-    public Player[] players;
+    public List<Player> players;
     public Route route;
     public Dice[] dices;
     public GameObject UI;
     public static int incomeEveryLap = 200;
     public static int stationPrice = 200;
+    public static int stationMultiplier = 10;
+    public static int factoryPrice = 200;
+    public static int factoryMultiplier = 50;
     public static int fineAmount = 200;
     public static int startBudget = 2000;
+    public static int jailPay = 300;
+    public static int parkBonus = 200;
     public static Vector3 jailPosition = new Vector3(0.6f, 0.6f, 16f);
     public static Vector3 visitingJailPosition = new Vector3(-1f, 0f, 17.5f);
     int steps;
@@ -47,12 +52,11 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         Instance = this;
-        playerCount = players.Length;
+        playerCount = players.Count;
         rollButton = GameObject.Find("Roll Button").GetComponent<Button>();
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         endTurnButton.interactable = false;
         BudgetBoard.Instance.Initialize();
-
         rollButton.onClick.AddListener(() =>
         {
             rollSignal = true;
@@ -68,8 +72,23 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if (rollSignal && !players[currPlayer].IsMoving() && !justRolled && hasEndedTurn)
+        if (players[currPlayer].inJail)
         {
+            SetRollButton(false);
+            SetEndTurnButton(false);
+            QuestionDialog.Instance.ShowQuestion("You are in jail. Would you pay " + jailPay.ToString() + " to get out?", () =>
+            {
+                GameUtils.Instance.AddMoney(players[currPlayer], -jailPay);
+                players[currPlayer].inJail = false;
+                players[currPlayer].transform.position = visitingJailPosition + new Vector3(0, 0.6f, 0);
+                SetRollButton(true);
+            }, () =>
+            {
+                SetEndTurnButton(true);
+            });
+        }
+        if (rollSignal && !players[currPlayer].IsMoving() && !justRolled && hasEndedTurn)
+        {   
             Debug.Log(players[currPlayer].name + " is rolling");
             rollSignal = false;
             hasEndedTurn = false;
@@ -129,6 +148,19 @@ public class GameManager : MonoBehaviour
     public Player GetPlayer(int i)
     {
         return players[i];
+    }
+
+    public void RemovePlayer(Player player)
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            if(players[i] == player)
+            {
+                players.RemoveAt(i);
+            }
+        }
+        playerCount = players.Count;
+        currPlayer = (currPlayer + 1) % playerCount;
     }
 
     public int GetPlayerNum()

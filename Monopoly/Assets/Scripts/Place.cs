@@ -41,7 +41,14 @@ public class Place : Node
         {
             BuyDialog.Instance.ShowQuestion(this, () =>
             {
-                GameUtils.Instance.Buy(enterPlayer, this);
+                if (enterPlayer.money < this.price)
+                {
+                    MessageDialog.Instance.ShowMessage("You don't have enough money", () => { });
+                }
+                else
+                {
+                    GameUtils.Instance.Buy(enterPlayer, this);
+                }
                 GameManager.Instance.SetEndTurnButton(true);
             }, () =>
             {
@@ -62,11 +69,7 @@ public class Place : Node
         }
         else if (owner != enterPlayer.name)
         {
-            GameUtils.Instance.PayPlace(enterPlayer, this);
-            MessageDialog.Instance.ShowMessage(enterPlayer.name + " paid " + pay[houseNum] + " to " + owner, () =>
-            {
-                GameManager.Instance.SetEndTurnButton(true);
-            });
+            GameUtils.Instance.PayPlace(enterPlayer, this);  
         } 
     }
 }

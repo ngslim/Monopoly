@@ -28,11 +28,18 @@ public class SpecialNode : Node
             {
                 int value = Random.Range(1, 4);
                 value *= 100;
-                GameUtils.Instance.AddMoney(enterPlayer, -value);
-                MessageDialog.Instance.ShowMessage("You lost " + value.ToString(), () =>
+                if (enterPlayer.money < value)
                 {
-                    GameManager.Instance.SetEndTurnButton(true);
-                });
+                    GameUtils.Instance.LosePlayer(enterPlayer);
+                }
+                else
+                {
+                    GameUtils.Instance.AddMoney(enterPlayer, -value);
+                    MessageDialog.Instance.ShowMessage("You lost " + value.ToString(), () =>
+                    {
+                        GameManager.Instance.SetEndTurnButton(true);
+                    });
+                }
             }
             else if (cardIndex == 2)
             {
@@ -55,17 +62,23 @@ public class SpecialNode : Node
 
         }
         else if (type == GameManager.NodeType.Station)
-        {
-            Debug.Log("Got to station");
+        { 
             if (owner == "")
             {
-                SpecialBuyDialog.Instance.ShowQuestion(this, () =>
+                SpecialBuyDialog.Instance.ShowFactoryQuestion(this, () =>
                 {
-                    GameUtils.Instance.AddMoney(enterPlayer, -GameManager.stationPrice);
-                    owner = enterPlayer.name;
+                    if (enterPlayer.money < GameManager.stationPrice)
+                    {
+                        MessageDialog.Instance.ShowMessage("You don't have enough money", () => { });
+                    }
+                    else
+                    {
+                        GameUtils.Instance.AddMoney(enterPlayer, -GameManager.stationPrice);
+                        owner = enterPlayer.name;
+                    }
                     GameManager.Instance.SetEndTurnButton(true);
                 }, () =>
-                {
+                {  
                     GameManager.Instance.SetEndTurnButton(true);
                 });
             }
@@ -78,40 +91,56 @@ public class SpecialNode : Node
             }
             else if (owner != enterPlayer.name)
             {
-                int ownerStationCount = 0;
-                for (int i = 1; i <=4;i++)
-                {
-                    SpecialNode station = GameObject.Find("Station " + i).GetComponent<SpecialNode>();
-                    if (station.owner == owner)
-                    {
-                        ownerStationCount++;
-                    }
-                }
-                Debug.Log(ownerStationCount);
-                Debug.Log(enterPlayer.GetLastStepsNum());
-                int payAmount = ownerStationCount * enterPlayer.GetLastStepsNum() * 10;
-                Player ownerPlayer = GameObject.Find(owner).GetComponent<Player>();
-                GameUtils.Instance.AddMoney(enterPlayer, -payAmount);
-                GameUtils.Instance.AddMoney(ownerPlayer, payAmount);
-                MessageDialog.Instance.ShowMessage(enterPlayer.name + " paid " + payAmount + " to " + owner, () =>
-                {
-                    GameManager.Instance.SetEndTurnButton(true);
-                });
+                GameUtils.Instance.PayStation(enterPlayer, this);
             }
         }
         else if (type == GameManager.NodeType.Pay)
         {
-            MessageDialog.Instance.ShowMessage("You are paying a fine costing " + GameManager.fineAmount, () =>
+            if (enterPlayer.money < GameManager.fineAmount)
             {
-                GameUtils.Instance.AddMoney(enterPlayer, -GameManager.fineAmount);
-                GameManager.Instance.SetEndTurnButton(true);
-            });
+                GameUtils.Instance.LosePlayer(enterPlayer);
+            }
+            else
+            {
+                MessageDialog.Instance.ShowMessage("You are paying a fine costing " + GameManager.fineAmount, () =>
+                {
+                    GameUtils.Instance.AddMoney(enterPlayer, -GameManager.fineAmount);
+                    GameManager.Instance.SetEndTurnButton(true);
+                });
+            }    
         }
         else if (type == GameManager.NodeType.Factory)
         {
-            MessageDialog.Instance.ShowMessage("You are at a factory", () => {
-                GameManager.Instance.SetEndTurnButton(true);
-            });
+            if (owner == "")
+            {
+                SpecialBuyDialog.Instance.ShowStationQuestion(this, () =>
+                {
+                    if (enterPlayer.money < GameManager.factoryPrice)
+                    {
+                        MessageDialog.Instance.ShowMessage("You don't have enough money", () => { });
+                    }
+                    else
+                    {
+                        GameUtils.Instance.AddMoney(enterPlayer, -GameManager.factoryPrice);
+                        owner = enterPlayer.name;
+                    }
+                    GameManager.Instance.SetEndTurnButton(true);
+                }, () =>
+                {
+                    GameManager.Instance.SetEndTurnButton(true);
+                });
+            }
+            else if (enterPlayer.name == owner)
+            {
+                MessageDialog.Instance.ShowMessage("You arrived at your factory", () =>
+                {
+                    GameManager.Instance.SetEndTurnButton(true);
+                });
+            }
+            else if (owner != enterPlayer.name)
+            {
+                GameUtils.Instance.PayFactory(enterPlayer, this);
+            }
         }
         else if (type == GameManager.NodeType.Jail)
         {
@@ -121,14 +150,27 @@ public class SpecialNode : Node
         }
         else if (type == GameManager.NodeType.GoToJail)
         {
-            MessageDialog.Instance.ShowMessage("You are sent to the jail", () =>
-            {
-                GameManager.Instance.SetEndTurnButton(true);
-            });
-            enterPlayer.transform.position = GameManager.jailPosition;
+            GameUtils.Instance.SendToJail(enterPlayer);
         }
         else if (type == GameManager.NodeType.Park)
         {
+            int lucky = Random.Range(1, 12);
+            int amount = 0;
+            string text = "";
+            if(lucky <= 10)
+            {
+                text = "You are wandering around the park and found nothing";
+            }
+            else
+            {
+                amount = GameManager.parkBonus;
+                text = "You are wandering around the park and found " + amount.ToString();
+            }
+            MessageDialog.Instance.ShowMessage(text, () => {
+
+                GameUtils.Instance.AddMoney(enterPlayer, amount);
+                GameManager.Instance.SetEndTurnButton(true);
+            });
             GameManager.Instance.SetEndTurnButton(true);
         }
     }
