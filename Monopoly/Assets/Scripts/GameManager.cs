@@ -78,10 +78,18 @@ public class GameManager : MonoBehaviour
             SetEndTurnButton(false);
             QuestionDialog.Instance.ShowQuestion("You are in jail. Would you pay " + jailPay.ToString() + " to get out?", () =>
             {
-                GameUtils.Instance.AddMoney(players[currPlayer], -jailPay);
-                players[currPlayer].inJail = false;
-                players[currPlayer].transform.position = visitingJailPosition + new Vector3(0, 0.6f, 0);
-                SetRollButton(true);
+                if (players[currPlayer].money < jailPay)
+                {
+                    MessageDialog.Instance.ShowMessage("You don't have enough money", () => { });
+                    SetEndTurnButton(true);
+                }
+                else
+                {
+                    GameUtils.Instance.AddMoney(players[currPlayer], -jailPay);
+                    players[currPlayer].inJail = false;
+                    players[currPlayer].transform.position = visitingJailPosition + new Vector3(0, 0.6f, 0);
+                    SetRollButton(true);
+                }
             }, () =>
             {
                 SetEndTurnButton(true);
@@ -126,6 +134,16 @@ public class GameManager : MonoBehaviour
             currPlayer = (currPlayer + 1) % playerCount;
             hasEndedTurn = true;
         }
+    }
+
+    public void EndTurn()
+    {
+        endTurnSignal = false;
+        Debug.Log(players[currPlayer].name + " has ended turn.");
+        currPlayer = (currPlayer + 1) % playerCount;
+        hasEndedTurn = true;
+        SetEndTurnButton(false);
+        SetRollButton(true);
     }
 
     private int RollDices(int diceNum)

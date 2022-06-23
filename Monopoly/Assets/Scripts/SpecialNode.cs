@@ -65,7 +65,7 @@ public class SpecialNode : Node
         { 
             if (owner == "")
             {
-                SpecialBuyDialog.Instance.ShowFactoryQuestion(this, () =>
+                SpecialBuyDialog.Instance.ShowStationQuestion(this, () =>
                 {
                     if (enterPlayer.money < GameManager.stationPrice)
                     {
@@ -113,7 +113,7 @@ public class SpecialNode : Node
         {
             if (owner == "")
             {
-                SpecialBuyDialog.Instance.ShowStationQuestion(this, () =>
+                SpecialBuyDialog.Instance.ShowFactoryQuestion(this, () =>
                 {
                     if (enterPlayer.money < GameManager.factoryPrice)
                     {

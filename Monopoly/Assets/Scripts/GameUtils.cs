@@ -145,12 +145,11 @@ public class GameUtils : MonoBehaviour
     
     public void SendToJail(Player player)
     {
-        MessageDialog.Instance.ShowMessage("You are sent to the jail", () =>
-        {
-            GameManager.Instance.SetEndTurnButton(true);
-        });
+        MessageDialog.Instance.ShowMessage("You are sent to the jail and ended turn", () => {
+        });  
         player.transform.position = GameManager.jailPosition;
         player.SetRoutePosition(10);
         player.inJail = true;
+        GameManager.Instance.EndTurn();
     }
 }
